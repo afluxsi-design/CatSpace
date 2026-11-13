@@ -1,8 +1,7 @@
-
 export async function onRequestGet({ env }) {
   if (!env.DB) {
     return Response.json(
-      { error: "Database binding DB is missing." },
+      { error: "Database connection unavailable." },
       { status: 503 }
     );
   }
@@ -13,16 +12,20 @@ export async function onRequestGet({ env }) {
         p.product_id,
         p.name,
         p.brand,
-        p.asin,
-        p.status,
-        p.verification_status,
+        p.category_id,
+        p.subcategory,
+        p.variant,
+        p.short_description,
+        p.editorial_summary,
+        p.amazon_url,
         c.name AS category_name
       FROM products p
       LEFT JOIN categories c
         ON c.category_id = p.category_id
-      WHERE p.status = 'published'
+      WHERE p.status = 'active'
         AND p.verification_status = 'verified'
-      ORDER BY p.category_id, p.product_id
+        AND c.active = 1
+      ORDER BY c.sort_order, p.name
     `).all();
 
     return Response.json(
@@ -36,10 +39,7 @@ export async function onRequestGet({ env }) {
     );
   } catch (error) {
     return Response.json(
-      {
-        error: "Could not retrieve products.",
-        details: error.message
-      },
+      { error: "Could not retrieve catalog." },
       { status: 500 }
     );
   }
