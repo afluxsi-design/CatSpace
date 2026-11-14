@@ -1,1 +1,701 @@
 
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="description" content="Find cat furniture that fits your cat, your home and your space with CatSpace Guide.">
+  <meta name="theme-color" content="#f8f7f4">
+  <title>Find Your Cat Furniture | CatSpace Guide</title>
+
+  <style>
+    :root {
+      --bg: #f8f7f4;
+      --surface: #ffffff;
+      --ink: #20231f;
+      --muted: #777b73;
+      --line: #e8e7e1;
+      --accent: #68765f;
+      --accent-dark: #4d5b45;
+      --soft: #eef0e9;
+      --serif: Georgia, "Times New Roman", serif;
+      --sans: Arial, Helvetica, sans-serif;
+    }
+
+    * { box-sizing: border-box; }
+
+    body {
+      margin: 0;
+      background: var(--bg);
+      color: var(--ink);
+      font-family: var(--sans);
+      line-height: 1.6;
+    }
+
+    a { color: inherit; text-decoration: none; }
+
+    .site-header {
+      min-height: 82px;
+      padding: 0 7%;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      border-bottom: 1px solid var(--line);
+      background: rgba(248,247,244,.96);
+    }
+
+    .brand {
+      display: flex;
+      align-items: center;
+      gap: 11px;
+      font-family: var(--serif);
+      font-size: 22px;
+      letter-spacing: -.5px;
+    }
+
+    .brand-mark {
+      width: 34px;
+      height: 34px;
+      border: 1px solid var(--accent);
+      color: var(--accent);
+      display: grid;
+      place-items: center;
+      font-size: 21px;
+    }
+
+    .brand small {
+      display: block;
+      color: var(--muted);
+      font: 9px var(--sans);
+      letter-spacing: 3px;
+      margin-top: -3px;
+    }
+
+    .header-link {
+      color: var(--muted);
+      font-size: 13px;
+    }
+
+    .header-link:hover { color: var(--accent-dark); }
+
+    main {
+      max-width: 1080px;
+      margin: auto;
+      padding: 75px 25px 90px;
+    }
+
+    .intro {
+      max-width: 720px;
+      margin: 0 auto 42px;
+      text-align: center;
+    }
+
+    .eyebrow {
+      color: var(--accent);
+      font-size: 10px;
+      letter-spacing: 3px;
+      font-weight: 700;
+      margin: 0 0 18px;
+    }
+
+    h1 {
+      font: 400 clamp(38px, 6vw, 62px)/1.12 var(--serif);
+      letter-spacing: -1.8px;
+      margin: 0 0 20px;
+    }
+
+    .intro > p:last-child {
+      color: var(--muted);
+      max-width: 570px;
+      margin: auto;
+      font-size: 15px;
+    }
+
+    .finder {
+      max-width: 780px;
+      margin: auto;
+      background: var(--surface);
+      border: 1px solid var(--line);
+      padding: 30px;
+      box-shadow: 0 15px 50px rgba(35,39,30,.035);
+    }
+
+    .field-label {
+      display: block;
+      font-size: 10px;
+      font-weight: 700;
+      letter-spacing: 2px;
+      margin-bottom: 12px;
+    }
+
+    textarea, select {
+      width: 100%;
+      border: 1px solid var(--line);
+      background: #fff;
+      color: var(--ink);
+      font: 14px var(--sans);
+      outline: none;
+      border-radius: 0;
+    }
+
+    textarea {
+      min-height: 112px;
+      padding: 17px;
+      resize: vertical;
+    }
+
+    textarea:focus, select:focus {
+      border-color: var(--accent);
+    }
+
+    textarea::placeholder { color: #a2a49e; }
+
+    .filter-row {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 18px;
+      margin-top: 22px;
+    }
+
+    select {
+      height: 49px;
+      padding: 0 13px;
+    }
+
+    .primary-button {
+      display: block;
+      width: 100%;
+      min-height: 53px;
+      border: 0;
+      margin-top: 25px;
+      background: var(--accent);
+      color: #fff;
+      font-size: 11px;
+      font-weight: 700;
+      letter-spacing: 2px;
+      cursor: pointer;
+      transition: background .2s;
+    }
+
+    .primary-button:hover { background: var(--accent-dark); }
+
+    .helper {
+      margin: 12px 0 0;
+      color: var(--muted);
+      font-size: 11px;
+      text-align: center;
+    }
+
+    .categories {
+      max-width: 780px;
+      margin: 55px auto 0;
+    }
+
+    .section-heading {
+      text-align: center;
+      margin-bottom: 22px;
+    }
+
+    .section-heading h2 {
+      font: 400 29px var(--serif);
+      margin: 0;
+    }
+
+    .category-grid {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 13px;
+    }
+
+    .category {
+      display: block;
+      text-align: left;
+      padding: 22px 18px;
+      background: transparent;
+      border: 1px solid var(--line);
+      cursor: pointer;
+      transition: border-color .2s, background .2s;
+    }
+
+    .category:hover, .category.selected {
+      border-color: var(--accent);
+      background: var(--soft);
+    }
+
+    .category-number {
+      color: var(--accent);
+      font-size: 10px;
+      letter-spacing: 2px;
+    }
+
+    .category h3 {
+      font: 400 20px var(--serif);
+      margin: 10px 0 5px;
+    }
+
+    .category p {
+      color: var(--muted);
+      font-size: 12px;
+      margin: 0;
+    }
+
+    .results {
+      max-width: 900px;
+      margin: 65px auto 0;
+      scroll-margin-top: 30px;
+    }
+
+    .results-heading {
+      display: flex;
+      justify-content: space-between;
+      align-items: end;
+      gap: 15px;
+      border-bottom: 1px solid var(--line);
+      padding-bottom: 17px;
+      margin-bottom: 20px;
+    }
+
+    .results-heading h2 {
+      font: 400 30px var(--serif);
+      margin: 0;
+    }
+
+    .results-count {
+      color: var(--muted);
+      font-size: 12px;
+    }
+
+    .result-grid {
+      display: grid;
+      grid-template-columns: repeat(2, minmax(0, 1fr));
+      gap: 17px;
+    }
+
+    .product-card {
+      background: var(--surface);
+      border: 1px solid var(--line);
+      padding: 24px;
+    }
+
+    .product-category {
+      color: var(--accent);
+      font-size: 9px;
+      letter-spacing: 2px;
+      font-weight: 700;
+    }
+
+    .product-card h3 {
+      font: 400 23px/1.25 var(--serif);
+      margin: 12px 0 5px;
+    }
+
+    .product-brand {
+      color: var(--muted);
+      font-size: 12px;
+    }
+
+    .product-description {
+      color: #60645d;
+      font-size: 13px;
+      margin: 17px 0;
+    }
+
+    .product-link {
+      display: inline-block;
+      color: var(--accent-dark);
+      border-bottom: 1px solid var(--accent);
+      padding-bottom: 3px;
+      font-size: 11px;
+      font-weight: 700;
+      letter-spacing: 1px;
+    }
+
+    .empty-state {
+      text-align: center;
+      padding: 48px 25px;
+      border: 1px solid var(--line);
+      background: var(--surface);
+    }
+
+    .empty-symbol {
+      color: var(--accent);
+      font: 36px var(--serif);
+      margin-bottom: 12px;
+    }
+
+    .empty-state h3 {
+      font: 400 26px var(--serif);
+      margin: 0 0 10px;
+    }
+
+    .empty-state p {
+      color: var(--muted);
+      max-width: 490px;
+      margin: auto;
+      font-size: 13px;
+    }
+
+    .disclosure {
+      max-width: 780px;
+      margin: 65px auto 0;
+      padding-top: 20px;
+      border-top: 1px solid var(--line);
+      color: var(--muted);
+      font-size: 11px;
+      text-align: center;
+    }
+
+    .site-footer {
+      padding: 25px;
+      border-top: 1px solid var(--line);
+      text-align: center;
+      color: var(--muted);
+      font-size: 11px;
+    }
+
+    .site-footer a {
+      color: var(--accent-dark);
+      margin: 0 9px;
+    }
+
+    @media (max-width: 650px) {
+      .site-header { padding: 0 20px; min-height: 70px; }
+      main { padding: 55px 17px 65px; }
+      .finder { padding: 21px; }
+      .filter-row, .category-grid, .result-grid {
+        grid-template-columns: 1fr;
+      }
+      .category { padding: 18px; }
+      .results-heading { align-items: start; flex-direction: column; }
+    }
+  </style>
+</head>
+
+<body>
+  <header class="site-header">
+    <a class="brand" href="/" aria-label="CatSpace Guide home">
+      <span class="brand-mark">C</span>
+      <span>CatSpace <small>GUIDE</small></span>
+    </a>
+    <a class="header-link" href="/">Back to home</a>
+  </header>
+
+  <main>
+    <section class="intro">
+      <p class="eyebrow">THE CATSPACE FINDER</p>
+      <h1>Find the right space for your cat.</h1>
+      <p>
+        Tell us what your cat needs and what your home looks like.
+        We'll help you explore suitable furniture and practical options.
+      </p>
+    </section>
+
+    <section class="finder" aria-label="Cat furniture finder">
+      <label class="field-label" for="needs">
+        WHAT ARE YOU LOOKING FOR?
+      </label>
+
+      <textarea
+        id="needs"
+        placeholder="Example: I have a large cat and limited floor space. I'm looking for a sturdy wall-mounted climbing setup..."
+      ></textarea>
+
+      <div class="filter-row">
+        <div>
+          <label class="field-label" for="category">FURNITURE TYPE</label>
+          <select id="category">
+            <option value="all">All categories</option>
+            <option value="CAT-TREE">Large Cat Trees</option>
+            <option value="CAT-WALL">Cat Wall Furniture</option>
+            <option value="CAT-WINDOW">Window Perches</option>
+          </select>
+        </div>
+
+        <div>
+          <label class="field-label" for="cat-size">YOUR CAT</label>
+          <select id="cat-size">
+            <option value="any">Any size</option>
+            <option value="large">Large cat</option>
+            <option value="small">Small cat</option>
+            <option value="multiple">Multiple cats</option>
+          </select>
+        </div>
+      </div>
+
+      <button class="primary-button" id="search-button">
+        FIND MY MATCH
+      </button>
+
+      <p class="helper">
+        Recommendations are based on available product information.
+      </p>
+    </section>
+
+    <section class="categories">
+      <div class="section-heading">
+        <p class="eyebrow">EXPLORE BY CATEGORY</p>
+        <h2>Start with what your cat loves.</h2>
+      </div>
+
+      <div class="category-grid">
+        <button class="category" data-category="CAT-TREE">
+          <span class="category-number">01</span>
+          <h3>Large Cat Trees</h3>
+          <p>Support, height and room to climb.</p>
+        </button>
+
+        <button class="category" data-category="CAT-WALL">
+          <span class="category-number">02</span>
+          <h3>Cat Wall Furniture</h3>
+          <p>Vertical space for curious cats.</p>
+        </button>
+
+        <button class="category" data-category="CAT-WINDOW">
+          <span class="category-number">03</span>
+          <h3>Window Perches</h3>
+          <p>A comfortable place to watch the world.</p>
+        </button>
+      </div>
+    </section>
+
+    <section class="results" id="results" hidden>
+      <div class="results-heading">
+        <div>
+          <p class="eyebrow">YOUR DISCOVERIES</p>
+          <h2>Explore your matches.</h2>
+        </div>
+        <span class="results-count" id="results-count"></span>
+      </div>
+
+      <div class="result-grid" id="result-grid"></div>
+    </section>
+
+    <section class="disclosure">
+      <strong>Affiliate disclosure:</strong>
+      CatSpace Guide may earn a commission from qualifying purchases
+      made through Amazon links. This does not affect our editorial assessments.
+    </section>
+  </main>
+
+  <footer class="site-footer">
+    <a href="/">Home</a>
+    <a href="/about/">About</a>
+    <a href="/editorial-policy/">Editorial Policy</a>
+    <a href="/affiliate-disclosure/">Affiliate Disclosure</a>
+    <p>© <span id="year"></span> CatSpace Guide. All rights reserved.</p>
+  </footer>
+
+  <script>
+    const categoryNames = {
+      "CAT-TREE": "Large Cat Trees",
+      "CAT-WALL": "Cat Wall Furniture",
+      "CAT-WINDOW": "Window Perches"
+    };
+
+    const needsInput = document.getElementById("needs");
+    const categoryInput = document.getElementById("category");
+    const catSizeInput = document.getElementById("cat-size");
+    const searchButton = document.getElementById("search-button");
+    const resultsSection = document.getElementById("results");
+    const resultGrid = document.getElementById("result-grid");
+    const resultsCount = document.getElementById("results-count");
+
+    let products = [];
+
+    document.getElementById("year").textContent =
+      new Date().getFullYear();
+
+    async function loadProducts() {
+      try {
+        const response = await fetch("/api/products", {
+          headers: { "Accept": "application/json" }
+        });
+
+        if (!response.ok) throw new Error("Catalog unavailable");
+
+        const data = await response.json();
+        products = Array.isArray(data.products) ? data.products : [];
+      } catch (error) {
+        products = [];
+        console.error("CatSpace catalog could not be loaded:", error);
+      }
+    }
+
+    function normalize(value) {
+      return String(value || "")
+        .toLowerCase()
+        .normalize("NFD")
+        .replace(/[\u0300-\u036f]/g, "");
+    }
+
+    function scoreProduct(product, words, description, selectedCategory, catSize) {
+      let score = 0;
+
+      const searchable = normalize([
+        product.name,
+        product.brand,
+        product.category_name,
+        product.category_id,
+        product.subcategory,
+        product.variant,
+        product.short_description,
+        product.editorial_summary
+      ].join(" "));
+
+      if (selectedCategory !== "all") {
+        if (product.category_id !== selectedCategory) return -1;
+        score += 5;
+      }
+
+      words.forEach(word => {
+        if (word.length > 2 && searchable.includes(word)) score += 2;
+      });
+
+      if (description.includes("large") &&
+          searchable.includes("large")) score += 2;
+
+      if (catSize === "large" &&
+          searchable.includes("large")) score += 2;
+
+      if (catSize === "multiple" &&
+          searchable.includes("multiple")) score += 2;
+
+      return score;
+    }
+
+    function createProductCard(product) {
+      const card = document.createElement("article");
+      card.className = "product-card";
+
+      const category = document.createElement("span");
+      category.className = "product-category";
+      category.textContent =
+        categoryNames[product.category_id] || "CAT FURNITURE";
+
+      const title = document.createElement("h3");
+      title.textContent = product.name || "Cat furniture";
+
+      const brand = document.createElement("p");
+      brand.className = "product-brand";
+      brand.textContent = product.brand || "";
+
+      const description = document.createElement("p");
+      description.className = "product-description";
+      description.textContent =
+        product.short_description ||
+        product.editorial_summary ||
+        "Explore the available product information.";
+
+      card.append(category, title, brand, description);
+
+      if (product.amazon_url) {
+        const link = document.createElement("a");
+        link.className = "product-link";
+        link.href = product.amazon_url;
+        link.target = "_blank";
+        link.rel = "nofollow sponsored noopener";
+        link.textContent = "VIEW ON AMAZON →";
+        card.append(link);
+      }
+
+      return card;
+    }
+
+    function showEmptyState(message) {
+      resultGrid.innerHTML = "";
+
+      const empty = document.createElement("div");
+      empty.className = "empty-state";
+      empty.style.gridColumn = "1 / -1";
+
+      const symbol = document.createElement("div");
+      symbol.className = "empty-symbol";
+      symbol.textContent = "C";
+
+      const title = document.createElement("h3");
+      title.textContent = "We're preparing your recommendations.";
+
+      const description = document.createElement("p");
+      description.textContent = message;
+
+      empty.append(symbol, title, description);
+      resultGrid.append(empty);
+      resultsCount.textContent = "Catalog update in progress";
+    }
+
+    function searchProducts() {
+      const description = normalize(needsInput.value);
+      const selectedCategory = categoryInput.value;
+      const catSize = catSizeInput.value;
+
+      const words = description
+        .split(/[^a-z0-9]+/)
+        .filter(word => word.length > 2);
+
+      resultsSection.hidden = false;
+      resultGrid.innerHTML = "";
+
+      if (products.length === 0) {
+        showEmptyState(
+          "Our product team is checking specifications and sources. " +
+          "Verified recommendations will appear here as they become available."
+        );
+        resultsSection.scrollIntoView({ behavior: "smooth" });
+        return;
+      }
+
+      const matches = products
+        .map(product => ({
+          product,
+          score: scoreProduct(
+            product, words, description, selectedCategory, catSize
+          )
+        }))
+        .filter(item => item.score >= 0)
+        .sort((a, b) => b.score - a.score)
+        .slice(0, 10);
+
+      if (matches.length === 0) {
+        showEmptyState(
+          "We couldn't find a verified product matching those filters yet. " +
+          "Try another category or a broader description."
+        );
+      } else {
+        matches.forEach(item => {
+          resultGrid.append(createProductCard(item.product));
+        });
+        resultsCount.textContent =
+          matches.length + (matches.length === 1 ? " result" : " results");
+      }
+
+      resultsSection.scrollIntoView({ behavior: "smooth" });
+    }
+
+    searchButton.addEventListener("click", searchProducts);
+
+    document.querySelectorAll(".category").forEach(button => {
+      button.addEventListener("click", () => {
+        categoryInput.value = button.dataset.category;
+
+        document.querySelectorAll(".category").forEach(item => {
+          item.classList.toggle("selected", item === button);
+        });
+
+        searchProducts();
+      });
+    });
+
+    categoryInput.addEventListener("change", () => {
+      document.querySelectorAll(".category").forEach(button => {
+        button.classList.toggle(
+          "selected",
+          button.dataset.category === categoryInput.value
+        );
+      });
+    });
+
+    loadProducts();
+  </script>
+</body>
+</html>
+
