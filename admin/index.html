@@ -1,4 +1,266 @@
-<!doctype html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>CatSpace Admin</title><link rel="stylesheet" href="/assets/site.css"></head><body><main class="admin-shell"><a class="text-link" href="/">← Back to site</a><h1>CatSpace Admin</h1><p>Private product catalog workspace — initial technical version.</p><section class="admin-box"><h2>Administrator access</h2><p>Enter the admin token configured as the <code>ADMIN_TOKEN</code> secret in Cloudflare Pages.</p><input id="token" type="password" autocomplete="current-password" placeholder="Admin token"><button id="load">Load catalog</button><p id="message" role="status"></p></section><section class="admin-box"><h2>Product catalog</h2><div id="results">Catalog is locked until authentication.</div></section></main><script>
-const tokenInput=document.getElementById('token'), message=document.getElementById('message'), results=document.getElementById('results');
-document.getElementById('load').addEventListener('click',async()=>{message.textContent='Loading…';try{const r=await fetch('/api/admin/products',{headers:{'Authorization':'Bearer '+tokenInput.value}});if(!r.ok)throw new Error(r.status===401?'Access denied. Check the token.':'Request failed: '+r.status);const data=await r.json();message.textContent='Catalog loaded.';if(!data.products?.length){results.textContent='No products registered yet.';return;}const table=document.createElement('table');table.className='admin-table';table.innerHTML='<thead><tr><th>ID</th><th>Product</th><th>Category</th><th>Status</th><th>Verification</th></tr></thead>';const tbody=document.createElement('tbody');for(const p of data.products){const tr=document.createElement('tr');for(const value of [p.product_id,p.name,p.category_name,p.status,p.verification_status]){const td=document.createElement('td');td.textContent=value??'—';tr.appendChild(td);}tbody.appendChild(tr);}table.appendChild(tbody);results.replaceChildren(table);}catch(e){message.textContent=e.message;}});
-</script></body></html>
+
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>CatSpace Admin</title>
+  <link rel="stylesheet" href="/assets/site.css">
+  <style>
+    .admin-shell{max-width:1100px;margin:40px auto;padding:20px}
+    .admin-box{background:#fff;padding:20px;margin:20px 0;border:1px solid #ddd;border-radius:12px}
+    .admin-form{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:12px}
+    .admin-form input,.admin-form select,.admin-form textarea{width:100%;padding:11px;border:1px solid #ccc;border-radius:6px}
+    .admin-form textarea{min-height:80px}
+    .admin-form button,.action-button{padding:10px 14px;border:0;border-radius:6px;cursor:pointer}
+    .admin-table-wrap{overflow-x:auto}
+    .admin-table{width:100%;border-collapse:collapse}
+    .admin-table th,.admin-table td{padding:10px;border-bottom:1px solid #ddd;text-align:left}
+    .actions{display:flex;flex-wrap:wrap;gap:6px}
+    .actions button{padding:7px;font-size:12px}
+    .status{font-weight:600}
+    @media(max-width:650px){.admin-form{grid-template-columns:1fr}}
+  </style>
+</head>
+<body>
+<main class="admin-shell">
+  <a href="/">← Back to CatSpace</a>
+  <h1>CatSpace Admin</h1>
+  <p>Product catalog management.</p>
+
+  <section class="admin-box">
+    <h2>Administrator access</h2>
+    <input id="token" type="password" autocomplete="current-password"
+      placeholder="Admin token">
+    <button id="load">Load catalog</button>
+    <p id="message" role="status"></p>
+  </section>
+
+  <section class="admin-box">
+    <h2 id="formTitle">Add product</h2>
+    <form id="productForm" class="admin-form">
+      <input name="product_id" placeholder="Product ID (e.g. TREE-004)" required>
+      <input name="name" placeholder="Product name" required>
+      <input name="brand" placeholder="Brand">
+      <select name="category_id" required>
+        <option value="">Select category</option>
+        <option value="CAT-TREE">Large Cat Trees</option>
+        <option value="CAT-WALL">Cat Wall Furniture</option>
+        <option value="CAT-WINDOW">Window Perches</option>
+      </select>
+      <input name="asin" placeholder="Amazon ASIN">
+      <input name="marketplace" value="US" placeholder="Marketplace">
+      <input name="variant" placeholder="Variant">
+      <input name="subcategory" placeholder="Subcategory">
+      <input name="amazon_url" placeholder="Amazon URL">
+      <input name="manufacturer_url" placeholder="Manufacturer URL">
+      <textarea name="short_description" placeholder="Short description"></textarea>
+      <textarea name="editorial_summary" placeholder="Editorial summary"></textarea>
+      <button type="submit" id="saveButton">Save new candidate</button>
+      <button type="button" id="cancelEdit">Cancel edit</button>
+    </form>
+  </section>
+
+  <section class="admin-box">
+    <h2>Product catalog</h2>
+    <div class="admin-table-wrap" id="results">
+      Catalog is locked until authentication.
+    </div>
+  </section>
+</main>
+
+<script>
+const tokenInput = document.getElementById("token");
+const message = document.getElementById("message");
+const results = document.getElementById("results");
+const form = document.getElementById("productForm");
+const formTitle = document.getElementById("formTitle");
+const saveButton = document.getElementById("saveButton");
+let products = [];
+let editingId = null;
+
+function headers() {
+  return {
+    "Authorization": "Bearer " + tokenInput.value,
+    "Content-Type": "application/json"
+  };
+}
+
+function setMessage(text) {
+  message.textContent = text;
+}
+
+function resetForm() {
+  form.reset();
+  form.elements.marketplace.value = "US";
+  form.elements.product_id.disabled = false;
+  editingId = null;
+  formTitle.textContent = "Add product";
+  saveButton.textContent = "Save new candidate";
+}
+
+function editProduct(id) {
+  const product = products.find(p => p.product_id === id);
+  if (!product) return;
+
+  editingId = id;
+  formTitle.textContent = "Edit product: " + id;
+  saveButton.textContent = "Save changes";
+
+  for (const field of form.elements) {
+    if (field.name && product[field.name] !== undefined) {
+      field.value = product[field.name] ?? "";
+    }
+  }
+
+  form.elements.product_id.disabled = true;
+  window.scrollTo({ top: 0, behavior: "smooth" });
+}
+
+async function updateProduct(id, changes) {
+  const response = await fetch("/api/admin/products", {
+    method: "PUT",
+    headers: headers(),
+    body: JSON.stringify({ product_id: id, ...changes })
+  });
+
+  const data = await response.json();
+  if (!response.ok) throw new Error(data.error || "Update failed");
+
+  await loadCatalog();
+}
+
+async function loadCatalog() {
+  setMessage("Loading catalog...");
+
+  try {
+    const response = await fetch("/api/admin/products", {
+      headers: headers()
+    });
+
+    const data = await response.json();
+    if (!response.ok) throw new Error(data.error || "Access denied");
+
+    products = data.products || [];
+    renderProducts();
+    setMessage("Catalog loaded: " + products.length + " products.");
+  } catch (error) {
+    setMessage(error.message);
+  }
+}
+
+function renderProducts() {
+  if (!products.length) {
+    results.textContent = "No products registered.";
+    return;
+  }
+
+  const table = document.createElement("table");
+  table.className = "admin-table";
+
+  const head = document.createElement("thead");
+  head.innerHTML = `
+    <tr>
+      <th>ID</th><th>Product</th><th>Category</th>
+      <th>Status</th><th>Verification</th><th>Actions</th>
+    </tr>`;
+  table.appendChild(head);
+
+  const tbody = document.createElement("tbody");
+
+  for (const p of products) {
+    const tr = document.createElement("tr");
+
+    for (const value of [
+      p.product_id, p.name, p.category_name,
+      p.status, p.verification_status
+    ]) {
+      const td = document.createElement("td");
+      td.textContent = value || "—";
+      tr.appendChild(td);
+    }
+
+    const actions = document.createElement("td");
+    actions.className = "actions";
+
+    const edit = document.createElement("button");
+    edit.textContent = "Edit";
+    edit.onclick = () => editProduct(p.product_id);
+    actions.appendChild(edit);
+
+    const verify = document.createElement("button");
+    verify.textContent = "Verify";
+    verify.disabled = p.verification_status === "verified";
+    verify.onclick = async () => {
+      try {
+        await updateProduct(p.product_id, {
+          verification_status: "verified"
+        });
+        setMessage("Product verified.");
+      } catch (e) { setMessage(e.message); }
+    };
+    actions.appendChild(verify);
+
+    const publish = document.createElement("button");
+    publish.textContent = "Publish";
+    publish.disabled = p.verification_status !== "verified" ||
+      p.status === "active";
+    publish.onclick = async () => {
+      try {
+        await updateProduct(p.product_id, { status: "active" });
+        setMessage("Product published.");
+      } catch (e) { setMessage(e.message); }
+    };
+    actions.appendChild(publish);
+
+    const review = document.createElement("button");
+    review.textContent = "Return to review";
+    review.disabled = p.status === "review";
+    review.onclick = async () => {
+      try {
+        await updateProduct(p.product_id, { status: "review" });
+        setMessage("Product returned to review.");
+      } catch (e) { setMessage(e.message); }
+    };
+    actions.appendChild(review);
+
+    tr.appendChild(actions);
+    tbody.appendChild(tr);
+  }
+
+  table.appendChild(tbody);
+  results.replaceChildren(table);
+}
+
+document.getElementById("load").addEventListener("click", loadCatalog);
+document.getElementById("cancelEdit").addEventListener("click", resetForm);
+
+form.addEventListener("submit", async event => {
+  event.preventDefault();
+
+  const body = Object.fromEntries(new FormData(form).entries());
+
+  try {
+    const response = await fetch("/api/admin/products", {
+      method: editingId ? "PUT" : "POST",
+      headers: headers(),
+      body: JSON.stringify(
+        editingId ? { ...body, product_id: editingId } : body
+      )
+    });
+
+    const data = await response.json();
+    if (!response.ok) throw new Error(data.error || "Save failed");
+
+    resetForm();
+    await loadCatalog();
+    setMessage(editingId ? "Product updated." : "Candidate added.");
+  } catch (error) {
+    setMessage(error.message);
+  }
+});
+
+resetForm();
+</script>
+</body>
+</html>
