@@ -1,266 +1,273 @@
-
 <!doctype html>
 <html lang="en">
 <head>
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
-  <title>CatSpace Admin</title>
+  <meta name="description" content="Discover and compare cat furniture, large cat trees, wall shelves and window perches.">
+  <title>CatSpace Guide | Better Spaces for Cats</title>
   <link rel="stylesheet" href="/assets/site.css">
   <style>
-    .admin-shell{max-width:1100px;margin:40px auto;padding:20px}
-    .admin-box{background:#fff;padding:20px;margin:20px 0;border:1px solid #ddd;border-radius:12px}
-    .admin-form{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:12px}
-    .admin-form input,.admin-form select,.admin-form textarea{width:100%;padding:11px;border:1px solid #ccc;border-radius:6px}
-    .admin-form textarea{min-height:80px}
-    .admin-form button,.action-button{padding:10px 14px;border:0;border-radius:6px;cursor:pointer}
-    .admin-table-wrap{overflow-x:auto}
-    .admin-table{width:100%;border-collapse:collapse}
-    .admin-table th,.admin-table td{padding:10px;border-bottom:1px solid #ddd;text-align:left}
-    .actions{display:flex;flex-wrap:wrap;gap:6px}
-    .actions button{padding:7px;font-size:12px}
-    .status{font-weight:600}
-    @media(max-width:650px){.admin-form{grid-template-columns:1fr}}
+    :root {
+      --ink:#202b35;
+      --muted:#687783;
+      --accent:#287b75;
+      --paper:#f6f8f7;
+      --line:#e2e9e6;
+    }
+    *{box-sizing:border-box}
+    body{margin:0;background:var(--paper);color:var(--ink);font-family:Arial,sans-serif}
+    a{color:inherit}
+    .container{width:min(1120px,92%);margin:auto}
+    .header{background:#fff;border-bottom:1px solid var(--line)}
+    .nav{min-height:72px;display:flex;align-items:center;justify-content:space-between;gap:20px}
+    .logo{font-size:25px;font-weight:800;text-decoration:none;letter-spacing:-1px}
+    .logo span{color:var(--accent)}
+    .nav a:last-child{font-weight:600;text-decoration:none}
+    .hero{padding:76px 0 66px;background:#e8f1ed}
+    .hero h1{font-size:clamp(36px,6vw,62px);line-height:1.05;max-width:720px;margin:0 0 20px;letter-spacing:-2px}
+    .hero p{font-size:18px;line-height:1.7;max-width:650px;color:#52635e}
+    .eyebrow{font-size:12px;font-weight:800;letter-spacing:2px;text-transform:uppercase;color:var(--accent)}
+    .section{padding:52px 0}
+    .section h2{font-size:30px;margin:0 0 12px}
+    .intro{color:var(--muted);line-height:1.6}
+    .categories{display:grid;grid-template-columns:repeat(3,1fr);gap:16px;margin:28px 0}
+    .category{padding:22px;background:#fff;border:1px solid var(--line);border-radius:12px;text-decoration:none}
+    .category strong{display:block;font-size:17px;margin-bottom:8px}
+    .category span{font-size:14px;color:var(--muted);line-height:1.5}
+    .toolbar{display:flex;gap:12px;margin:24px 0;flex-wrap:wrap}
+    .toolbar input,.toolbar select{padding:13px;border:1px solid var(--line);border-radius:8px;background:white;font-size:15px}
+    .toolbar input{flex:1;min-width:220px}
+    .toolbar select{min-width:190px}
+    .catalog{display:grid;grid-template-columns:repeat(3,1fr);gap:18px}
+    .product{background:white;border:1px solid var(--line);border-radius:12px;overflow:hidden}
+    .product-body{padding:20px}
+    .product h3{font-size:18px;margin:8px 0}
+    .product p{font-size:14px;line-height:1.6;color:var(--muted)}
+    .product-category{font-size:11px;text-transform:uppercase;letter-spacing:1px;color:var(--accent);font-weight:800}
+    .amazon-link{display:inline-block;margin-top:10px;padding:11px 15px;border-radius:7px;background:var(--accent);color:white;text-decoration:none;font-weight:700;font-size:14px}
+    .empty{padding:38px 22px;background:#fff;border:1px solid var(--line);border-radius:12px;text-align:center;grid-column:1/-1}
+    .empty h3{margin-top:0}
+    .empty p{color:var(--muted);line-height:1.6}
+    .guidance{padding:28px;background:#fff;border:1px solid var(--line);border-radius:12px;line-height:1.7}
+    .footer{padding:30px 0;background:#202b35;color:#e9efec;font-size:13px;line-height:1.7}
+    .footer a{color:white}
+    @media(max-width:760px){
+      .categories,.catalog{grid-template-columns:1fr}
+      .hero{padding:52px 0}
+      .nav{min-height:62px}
+    }
   </style>
 </head>
 <body>
-<main class="admin-shell">
-  <a href="/">← Back to CatSpace</a>
-  <h1>CatSpace Admin</h1>
-  <p>Product catalog management.</p>
 
-  <section class="admin-box">
-    <h2>Administrator access</h2>
-    <input id="token" type="password" autocomplete="current-password"
-      placeholder="Admin token">
-    <button id="load">Load catalog</button>
-    <p id="message" role="status"></p>
+<header class="header">
+  <div class="container nav">
+    <a class="logo" href="/">Cat<span>Space</span></a>
+    <a href="#catalog">Explore products</a>
+  </div>
+</header>
+
+<main>
+  <section class="hero">
+    <div class="container">
+      <div class="eyebrow">Cat furniture guide</div>
+      <h1>Better spaces for happier cats.</h1>
+      <p>
+        Discover cat furniture designed for climbing, resting and exploring.
+        Find ideas for your home and compare products for your cat's needs.
+      </p>
+      <a class="amazon-link" href="#catalog">Explore the catalog</a>
+    </div>
   </section>
 
-  <section class="admin-box">
-    <h2 id="formTitle">Add product</h2>
-    <form id="productForm" class="admin-form">
-      <input name="product_id" placeholder="Product ID (e.g. TREE-004)" required>
-      <input name="name" placeholder="Product name" required>
-      <input name="brand" placeholder="Brand">
-      <select name="category_id" required>
-        <option value="">Select category</option>
+  <section class="section container">
+    <div class="eyebrow">Explore by category</div>
+    <h2>Find the right space for your cat</h2>
+    <p class="intro">Browse furniture ideas for different homes, spaces and feline habits.</p>
+
+    <div class="categories">
+      <a class="category" href="#catalog" data-category="CAT-TREE">
+        <strong>Large Cat Trees</strong>
+        <span>Tall structures, climbing platforms and resting spaces.</span>
+      </a>
+      <a class="category" href="#catalog" data-category="CAT-WALL">
+        <strong>Cat Wall Furniture</strong>
+        <span>Wall shelves, steps and vertical climbing systems.</span>
+      </a>
+      <a class="category" href="#catalog" data-category="CAT-WINDOW">
+        <strong>Window Perches</strong>
+        <span>Window beds, hammocks and sunny viewing spots.</span>
+      </a>
+    </div>
+  </section>
+
+  <section class="section container" id="catalog">
+    <div class="eyebrow">Our selection</div>
+    <h2>Explore cat furniture</h2>
+    <p class="intro">Search and filter the products available in our catalog.</p>
+
+    <div class="toolbar">
+      <input id="search" type="search" placeholder="Search products or brands..." aria-label="Search products">
+      <select id="category" aria-label="Filter by category">
+        <option value="">All categories</option>
         <option value="CAT-TREE">Large Cat Trees</option>
         <option value="CAT-WALL">Cat Wall Furniture</option>
         <option value="CAT-WINDOW">Window Perches</option>
       </select>
-      <input name="asin" placeholder="Amazon ASIN">
-      <input name="marketplace" value="US" placeholder="Marketplace">
-      <input name="variant" placeholder="Variant">
-      <input name="subcategory" placeholder="Subcategory">
-      <input name="amazon_url" placeholder="Amazon URL">
-      <input name="manufacturer_url" placeholder="Manufacturer URL">
-      <textarea name="short_description" placeholder="Short description"></textarea>
-      <textarea name="editorial_summary" placeholder="Editorial summary"></textarea>
-      <button type="submit" id="saveButton">Save new candidate</button>
-      <button type="button" id="cancelEdit">Cancel edit</button>
-    </form>
+    </div>
+
+    <div id="catalogStatus" class="intro" role="status">Loading catalog...</div>
+    <div class="catalog" id="products"></div>
   </section>
 
-  <section class="admin-box">
-    <h2>Product catalog</h2>
-    <div class="admin-table-wrap" id="results">
-      Catalog is locked until authentication.
+  <section class="section container">
+    <div class="guidance">
+      <h2>Choose with confidence</h2>
+      <p>
+        Before choosing cat furniture, consider your cat's size, weight,
+        activity level, available space and the installation requirements
+        of the product.
+      </p>
     </div>
   </section>
 </main>
 
+<footer class="footer">
+  <div class="container">
+    <strong>CatSpace Guide</strong>
+    <p>Independent product discovery and cat furniture guidance.</p>
+    <p>
+      As an Amazon Associate, we earn from qualifying purchases.
+      Product availability and details may change. Always check the
+      current information on the retailer's page.
+    </p>
+    <p>© <span id="year"></span> CatSpace Guide.</p>
+  </div>
+</footer>
+
 <script>
-const tokenInput = document.getElementById("token");
-const message = document.getElementById("message");
-const results = document.getElementById("results");
-const form = document.getElementById("productForm");
-const formTitle = document.getElementById("formTitle");
-const saveButton = document.getElementById("saveButton");
-let products = [];
-let editingId = null;
+const catalog = document.getElementById("products");
+const statusText = document.getElementById("catalogStatus");
+const searchInput = document.getElementById("search");
+const categoryInput = document.getElementById("category");
 
-function headers() {
-  return {
-    "Authorization": "Bearer " + tokenInput.value,
-    "Content-Type": "application/json"
-  };
-}
+let allProducts = [];
 
-function setMessage(text) {
-  message.textContent = text;
-}
-
-function resetForm() {
-  form.reset();
-  form.elements.marketplace.value = "US";
-  form.elements.product_id.disabled = false;
-  editingId = null;
-  formTitle.textContent = "Add product";
-  saveButton.textContent = "Save new candidate";
-}
-
-function editProduct(id) {
-  const product = products.find(p => p.product_id === id);
-  if (!product) return;
-
-  editingId = id;
-  formTitle.textContent = "Edit product: " + id;
-  saveButton.textContent = "Save changes";
-
-  for (const field of form.elements) {
-    if (field.name && product[field.name] !== undefined) {
-      field.value = product[field.name] ?? "";
-    }
-  }
-
-  form.elements.product_id.disabled = true;
-  window.scrollTo({ top: 0, behavior: "smooth" });
-}
-
-async function updateProduct(id, changes) {
-  const response = await fetch("/api/admin/products", {
-    method: "PUT",
-    headers: headers(),
-    body: JSON.stringify({ product_id: id, ...changes })
-  });
-
-  const data = await response.json();
-  if (!response.ok) throw new Error(data.error || "Update failed");
-
-  await loadCatalog();
-}
-
-async function loadCatalog() {
-  setMessage("Loading catalog...");
-
-  try {
-    const response = await fetch("/api/admin/products", {
-      headers: headers()
-    });
-
-    const data = await response.json();
-    if (!response.ok) throw new Error(data.error || "Access denied");
-
-    products = data.products || [];
-    renderProducts();
-    setMessage("Catalog loaded: " + products.length + " products.");
-  } catch (error) {
-    setMessage(error.message);
-  }
-}
+document.getElementById("year").textContent = new Date().getFullYear();
 
 function renderProducts() {
-  if (!products.length) {
-    results.textContent = "No products registered.";
+  const term = searchInput.value.trim().toLowerCase();
+  const category = categoryInput.value;
+
+  const filtered = allProducts.filter(product => {
+    const matchesText =
+      [product.name, product.brand, product.short_description]
+        .filter(Boolean)
+        .join(" ")
+        .toLowerCase()
+        .includes(term);
+
+    const matchesCategory =
+      !category || product.category_id === category;
+
+    return matchesText && matchesCategory;
+  });
+
+  catalog.replaceChildren();
+
+  if (!filtered.length) {
+    const empty = document.createElement("div");
+    empty.className = "empty";
+
+    const heading = document.createElement("h3");
+    heading.textContent = allProducts.length
+      ? "No matching products found"
+      : "Our catalog is being prepared";
+
+    const paragraph = document.createElement("p");
+    paragraph.textContent = allProducts.length
+      ? "Try another search or category."
+      : "We are reviewing product details and selecting suitable cat furniture. Please check back soon.";
+
+    empty.append(heading, paragraph);
+    catalog.appendChild(empty);
     return;
   }
 
-  const table = document.createElement("table");
-  table.className = "admin-table";
+  for (const product of filtered) {
+    const card = document.createElement("article");
+    card.className = "product";
 
-  const head = document.createElement("thead");
-  head.innerHTML = `
-    <tr>
-      <th>ID</th><th>Product</th><th>Category</th>
-      <th>Status</th><th>Verification</th><th>Actions</th>
-    </tr>`;
-  table.appendChild(head);
+    const body = document.createElement("div");
+    body.className = "product-body";
 
-  const tbody = document.createElement("tbody");
+    const categoryLabel = document.createElement("div");
+    categoryLabel.className = "product-category";
+    categoryLabel.textContent = product.category_name || "Cat furniture";
 
-  for (const p of products) {
-    const tr = document.createElement("tr");
+    const title = document.createElement("h3");
+    title.textContent = product.name;
 
-    for (const value of [
-      p.product_id, p.name, p.category_name,
-      p.status, p.verification_status
-    ]) {
-      const td = document.createElement("td");
-      td.textContent = value || "—";
-      tr.appendChild(td);
+    const brand = document.createElement("p");
+    brand.textContent = product.brand || "";
+
+    const description = document.createElement("p");
+    description.textContent =
+      product.editorial_summary ||
+      product.short_description ||
+      "Product details will be added soon.";
+
+    body.append(categoryLabel, title, brand, description);
+
+    if (product.amazon_url) {
+      const link = document.createElement("a");
+      link.className = "amazon-link";
+      link.href = product.amazon_url;
+      link.target = "_blank";
+      link.rel = "nofollow sponsored noopener";
+      link.textContent = "View on Amazon";
+      body.appendChild(link);
     }
 
-    const actions = document.createElement("td");
-    actions.className = "actions";
-
-    const edit = document.createElement("button");
-    edit.textContent = "Edit";
-    edit.onclick = () => editProduct(p.product_id);
-    actions.appendChild(edit);
-
-    const verify = document.createElement("button");
-    verify.textContent = "Verify";
-    verify.disabled = p.verification_status === "verified";
-    verify.onclick = async () => {
-      try {
-        await updateProduct(p.product_id, {
-          verification_status: "verified"
-        });
-        setMessage("Product verified.");
-      } catch (e) { setMessage(e.message); }
-    };
-    actions.appendChild(verify);
-
-    const publish = document.createElement("button");
-    publish.textContent = "Publish";
-    publish.disabled = p.verification_status !== "verified" ||
-      p.status === "active";
-    publish.onclick = async () => {
-      try {
-        await updateProduct(p.product_id, { status: "active" });
-        setMessage("Product published.");
-      } catch (e) { setMessage(e.message); }
-    };
-    actions.appendChild(publish);
-
-    const review = document.createElement("button");
-    review.textContent = "Return to review";
-    review.disabled = p.status === "review";
-    review.onclick = async () => {
-      try {
-        await updateProduct(p.product_id, { status: "review" });
-        setMessage("Product returned to review.");
-      } catch (e) { setMessage(e.message); }
-    };
-    actions.appendChild(review);
-
-    tr.appendChild(actions);
-    tbody.appendChild(tr);
+    card.appendChild(body);
+    catalog.appendChild(card);
   }
-
-  table.appendChild(tbody);
-  results.replaceChildren(table);
 }
 
-document.getElementById("load").addEventListener("click", loadCatalog);
-document.getElementById("cancelEdit").addEventListener("click", resetForm);
-
-form.addEventListener("submit", async event => {
-  event.preventDefault();
-
-  const body = Object.fromEntries(new FormData(form).entries());
-
+async function loadCatalog() {
   try {
-    const response = await fetch("/api/admin/products", {
-      method: editingId ? "PUT" : "POST",
-      headers: headers(),
-      body: JSON.stringify(
-        editingId ? { ...body, product_id: editingId } : body
-      )
+    const response = await fetch("/api/products", {
+      headers: { "Accept": "application/json" },
+      cache: "no-store"
     });
 
-    const data = await response.json();
-    if (!response.ok) throw new Error(data.error || "Save failed");
+    if (!response.ok) throw new Error("Catalog unavailable");
 
-    resetForm();
-    await loadCatalog();
-    setMessage(editingId ? "Product updated." : "Candidate added.");
-  } catch (error) {
-    setMessage(error.message);
+    const data = await response.json();
+    allProducts = Array.isArray(data.products) ? data.products : [];
+
+    statusText.textContent = allProducts.length
+      ? allProducts.length + " products available."
+      : "No products have been published yet.";
+
+    renderProducts();
+  } catch {
+    statusText.textContent = "We could not load the catalog. Please try again later.";
+    catalog.replaceChildren();
   }
+}
+
+searchInput.addEventListener("input", renderProducts);
+categoryInput.addEventListener("change", renderProducts);
+
+document.querySelectorAll(".category").forEach(link => {
+  link.addEventListener("click", () => {
+    categoryInput.value = link.dataset.category;
+    renderProducts();
+  });
 });
 
-resetForm();
+loadCatalog();
 </script>
 </body>
 </html>
