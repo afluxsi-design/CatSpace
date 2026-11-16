@@ -422,12 +422,32 @@
         </div>
       </div>
 
+      <div class="filter-row">
+        <div>
+          <label class="field-label" for="space">AVAILABLE FLOOR SPACE</label>
+          <select id="space">
+            <option value="any">No preference</option>
+            <option value="limited">Limited floor space</option>
+            <option value="open">Floor space available</option>
+          </select>
+        </div>
+        <div>
+          <label class="field-label" for="mounting">PREFERRED LOCATION</label>
+          <select id="mounting">
+            <option value="any">Any location</option>
+            <option value="wall">Wall-mounted</option>
+            <option value="window">Window-mounted / windowsill</option>
+            <option value="floor">Floor-standing</option>
+          </select>
+        </div>
+      </div>
+
       <button class="primary-button" id="search-button">
         FIND MY MATCH
       </button>
 
       <p class="helper">
-        Recommendations are based on available product information.
+        Only active products with verified catalog status can appear. We do not infer weight limits, dimensions or installation compatibility when those details are not documented.
       </p>
     </section>
 
@@ -495,6 +515,8 @@
     const needsInput = document.getElementById("needs");
     const categoryInput = document.getElementById("category");
     const catSizeInput = document.getElementById("cat-size");
+    const spaceInput = document.getElementById("space");
+    const mountingInput = document.getElementById("mounting");
     const searchButton = document.getElementById("search-button");
     const resultsSection = document.getElementById("results");
     const resultGrid = document.getElementById("result-grid");
@@ -528,7 +550,7 @@
         .replace(/[\u0300-\u036f]/g, "");
     }
 
-    function scoreProduct(product, words, description, selectedCategory, catSize) {
+    function scoreProduct(product, words, description, selectedCategory, catSize, space, mounting) {
       let score = 0;
 
       const searchable = normalize([
@@ -560,6 +582,19 @@
       if (catSize === "multiple" &&
           searchable.includes("multiple")) score += 2;
 
+      // These are editorial relevance signals, not claims about product safety.
+      const category = product.category_id;
+      if (space === "limited") {
+        if (category === "CAT-WALL") score += 3;
+        if (category === "CAT-WINDOW") score += 2;
+        if (category === "CAT-TREE") score -= 2;
+      }
+      if (space === "open" && category === "CAT-TREE") score += 1;
+
+      if (mounting === "wall" && category !== "CAT-WALL") return -1;
+      if (mounting === "window" && category !== "CAT-WINDOW") return -1;
+      if (mounting === "floor" && category !== "CAT-TREE") return -1;
+
       return score;
     }
 
@@ -579,6 +614,10 @@
       brand.className = "product-brand";
       brand.textContent = product.brand || "";
 
+      const verification = document.createElement("span");
+      verification.className = "product-category";
+      verification.textContent = "VERIFIED CATALOG LISTING";
+
       const description = document.createElement("p");
       description.className = "product-description";
       description.textContent =
@@ -586,7 +625,7 @@
         product.editorial_summary ||
         "Explore the available product information.";
 
-      card.append(category, title, brand, description);
+      card.append(category, verification, title, brand, description);
 
       if (product.amazon_url) {
         const link = document.createElement("a");
@@ -627,6 +666,8 @@
       const description = normalize(needsInput.value);
       const selectedCategory = categoryInput.value;
       const catSize = catSizeInput.value;
+      const space = spaceInput.value;
+      const mounting = mountingInput.value;
 
       const words = description
         .split(/[^a-z0-9]+/)
@@ -648,17 +689,17 @@
         .map(product => ({
           product,
           score: scoreProduct(
-            product, words, description, selectedCategory, catSize
+            product, words, description, selectedCategory, catSize, space, mounting
           )
         }))
-        .filter(item => item.score >= 0)
+        .filter(item => item.score > 0)
         .sort((a, b) => b.score - a.score)
         .slice(0, 10);
 
       if (matches.length === 0) {
         showEmptyState(
-          "We couldn't find a verified product matching those filters yet. " +
-          "Try another category or a broader description."
+          "No verified listing currently matches all your selected preferences. " +
+          "Try a broader location or category. We will not recommend an item based on missing specifications."
         );
       } else {
         matches.forEach(item => {
