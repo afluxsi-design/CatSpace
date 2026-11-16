@@ -1,29 +1,24 @@
-# CatSpace Guide — checklist de construcción
+# CatSpace MVP checklist
 
-## Paso actual: starter técnico
-- [x] Estructura inicial del sitio
-- [x] Diseño responsive inicial
-- [x] Tres páginas de categoría
-- [x] Esquema D1
-- [x] Nueve candidatos registrados como pendientes
-- [x] API pública solo para productos verificados y activos
-- [x] Vista administrativa inicial de solo lectura
+## Implemented in launch/mvp-finder-catalog
+- [x] Keep all nine original ASINs in D1 as pending candidates.
+- [x] Finder gains floor-space and preferred-location controls.
+- [x] Finder excludes zero-relevance matches rather than listing every product.
+- [x] Finder explains that filters are editorial signals, not verified physical compatibility.
+- [x] Category pages explain buying criteria and load only active, verified products from the public API.
+- [x] Affiliate disclosure included on category pages.
+- [x] README updated to reflect the existing Cloudflare Pages deployment.
 
-## Próximo bloque
-- [ ] Crear base D1 en la cuenta Cloudflare
-- [ ] Desplegar Pages conectado a Git
-- [ ] Configurar binding DB
-- [ ] Configurar ADMIN_TOKEN como secret
-- [ ] Activar Cloudflare Access para /admin/*
-- [ ] Probar endpoint /api/products
-- [ ] Probar acceso autorizado y no autorizado a /api/admin/products
+## Must be checked in the owner's Cloudflare account
+- [ ] Confirm D1 binding named DB.
+- [ ] Confirm ADMIN_TOKEN is configured as a Functions secret.
+- [ ] Apply Cloudflare Access to /admin/*.
+- [ ] Run production smoke tests for /api/products and /api/admin/products.
+- [ ] Confirm the custom domain and DNS when purchased.
+- [ ] Confirm Amazon Associates US Tracking ID and policy-compliant links.
 
-## Después
-- [ ] Añadir operaciones CRUD seguras al panel
-- [ ] Añadir edición y sustitución transaccional
-- [ ] Añadir historial y auditoría automática
-- [ ] Añadir gestión de artículos y fuentes
-- [ ] Completar verificación documental de productos
-- [ ] Publicar artículos SEO
-- [ ] Configurar Amazon Associates y disclosure
-- [ ] Integrar Creators API cuando exista acceso
+## Editorial verification still required
+- [ ] Verify all nine ASINs, variants and manufacturer sources.
+- [ ] Record product dimensions, platform dimensions, stated weight limits and installation details only from reliable sources.
+- [ ] Publish only products marked verified and active.
+- [ ] Add actual verified product comparison data before claiming category recommendations.
