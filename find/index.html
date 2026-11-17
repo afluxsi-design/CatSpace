@@ -621,8 +621,8 @@
       const description = document.createElement("p");
       description.className = "product-description";
       description.textContent =
-        product.short_description ||
         product.editorial_summary ||
+        product.short_description ||
         "Explore the available product information.";
 
       card.append(category, verification, title, brand, description);
