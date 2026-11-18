@@ -39,3 +39,29 @@ Un candidato no se publica como recomendación verificada solo porque su URL exi
 
 ## Estado
 Esta revisión documenta evidencia pública de páginas de producto consultadas el 18 de noviembre de 2026. No modifica el estado del catálogo D1 ni equivale a una aprobación de publicación.
+
+## Reinspección Amazon US — 2026-11-18 (segunda pasada)
+Se consultaron directamente los nueve ASIN que figuran en el banco inicial de candidatos. Las páginas se abrieron en Amazon.com; se observó un control anti-bot inicial en B0F9FB86V8 que pudo superarse con “Continue shopping”. No se observó redirección a otro marketplace ni falta de stock en los productos examinados. La disponibilidad puede cambiar y esta consulta no garantiza entrega a todos los códigos postales.
+
+| ASIN | Identidad/variante que mostró la página en esta pasada | Disponibilidad/datos | Resultado de catálogo |
+|---|---|---|---|
+| B0F9FB86V8 | Zakkart SnugCloud Foldable Cat Window Perch, Cream White, Large | In Stock; 25.2 x 14.96 x 7.87 in; ventosas; capacidad indicada 40 lb. | Candidato Window Perch; conservar en revisión hasta comparar con ficha del fabricante. |
+| B0CBTXSBFW | Zakkart Cat Perch for Windowsill with Bolsters, Natural Wood/Gray, Large | In Stock; 24 x 15 x 9 in; montaje de gancho al alféizar; capacidad indicada 40 lb; requiere ranura de al menos 0.5 in. | Candidato Window Perch; aptitud depende de la geometría del alféizar. |
+| B0DGKR5MMP | Globlazer F70 Pro, Light Grey, XL | Available via buying options; 21.65 x 17.7 x 70.08 in; suelo/kit antivuelco; capacidad no declarada. | TREE-001 sigue needs_review. |
+| B08MQ7ZD4G | Feandrea Cat Tree, 81.1-Inch, Smoky Gray, XXL | In Stock; 23.6 x 19.7 x 81.1 in; hasta 15.4 lb por gato; fijación antivuelco a pared. | TREE-002: candidato más sólido para gatos medianos, pero no afirmar aptitud para gatos muy grandes sin revisar perchas/condos y fabricante. |
+| B0D2VVHS5F | Heybly Cat Tree, 71-Inch, Smoky Gray | In Stock; 43.3 x 21.7 x 70.9 in; máximo 11 lb por gato; kit antivuelco. | TREE-003: no posicionar para gatos grandes; limitar a gatos pequeños/medianos si la ficha del fabricante confirma. |
+| B0GSFG68GB | La página mostró “Heybly Cat Tree”, Light Grey, 71 inch, no FUKUMARU wall shelves | In Stock; hasta 11 lb por gato; árbol de suelo con kit antivuelco. | **Conflicto crítico**: el ASIN almacenado en WALL-001 parece corresponder a un árbol Heybly, no a un sistema FUKUMARU de pared. No publicar; corregir la asociación ASIN/categoría tras confirmar con fabricante. |
+| B0DX75TKSB | FUKUMARU Cat Wall Shelves, Beige, 5-in-1 | In Stock; montaje a pared y fijación a studs; página mostró 7 x 13 x 17 in, pero no capacidad numérica en esta pasada. | WALL-002 sigue needs_review; validar dimensiones del conjunto y capacidad con fabricante. |
+| B0FJDY749J | La página mostró FUKUMARU Cat Wall Shelves, 6-in-1, Black | In Stock; montaje a pared, studs requeridos en drywall; dimensiones mostradas 7 x 13 x 17 in; capacidad no visible. | **Conflicto de marca** con pasada anterior (antes aparecía Fopetfy). No publicar hasta confirmar vendedor, marca y variante. |
+| B09WDDGP2V | La página mostró Cat Wall Shelves, Brown, 5-in-1 | In Stock; montaje a pared con fijación a studs; capacidad indicada 44 lb por shelf; medidas completas no visibles. | **Conflicto crítico**: el ASIN guardado como WINDOW-003/AMOSIJOY window perch parece corresponder a estantería de pared. No publicar como ventana; sustituir el candidato por un ASIN correcto. |
+
+### Acciones obligatorias antes de activar enlaces
+- Resolver los conflictos B0GSFG68GB y B09WDDGP2V contra la ficha del fabricante o el identificador ASIN correcto; no “arreglar” solo el nombre.
+- Revalidar B0FJDY749J porque la marca no fue consistente entre consultas.
+- Para la categoría CAT-TREE hay tres candidatos, pero ninguno debe publicarse como “large cat” hasta tener evidencia suficiente de capacidad y dimensiones útiles de las plataformas.
+- Para CAT-WALL hay como mínimo dos candidatos razonables (B0DX75TKSB y B0FJDY749J), pero faltan confirmaciones de capacidad/medidas y el segundo tiene conflicto de marca.
+- Para CAT-WINDOW los candidatos más claros de esta pasada son B0F9FB86V8 y B0CBTXSBFW. Aún faltan dos productos correctos para llegar al mínimo de cuatro.
+- No mostrar precios de esta inspección como actuales.
+
+## Afiliados: diseño de seguimiento
+El esquema actual de `products` no tiene un campo de Tracking ID por producto. La API pública entrega `amazon_url` directamente y no añade `tag=`. Antes de monetizar, ampliar el modelo para guardar el identificador aprobado de cada producto/campaña y construir el enlace especial con el parámetro `tag` correspondiente. No introducir etiquetas inventadas. Amazon permite hasta 100 Tracking IDs por cuenta; los sub-tags adicionales requieren solicitud/aprobación según sus políticas.
