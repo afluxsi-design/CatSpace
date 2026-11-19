@@ -65,3 +65,41 @@ Se consultaron directamente los nueve ASIN que figuran en el banco inicial de ca
 
 ## Afiliados: diseño de seguimiento
 El esquema actual de `products` no tiene un campo de Tracking ID por producto. La API pública entrega `amazon_url` directamente y no añade `tag=`. Antes de monetizar, ampliar el modelo para guardar el identificador aprobado de cada producto/campaña y construir el enlace especial con el parámetro `tag` correspondiente. No introducir etiquetas inventadas. Amazon permite hasta 100 Tracking IDs por cuenta; los sub-tags adicionales requieren solicitud/aprobación según sus políticas.
+
+## Ampliación del banco de candidatos — 2026-11-19
+
+La búsqueda secundaria amplía el banco de candidatos a un mínimo de cuatro registros por categoría. **No son recomendaciones verificadas ni están publicadas**: todos permanecen `review/pending` hasta una inspección exacta de Amazon US, variantes, especificaciones y seguridad.
+
+### Large Cat Trees — 6 candidatos
+- TREE-001 Globlazer F70 Pro — B0DGKR5MMP (revisión anterior).
+- TREE-002 Feandrea 81.1-inch — B08MQ7ZD4G (revisión anterior).
+- TREE-003 Heybly HCT034G — B0D2VVHS5F (revisión anterior; límite 11 lb por gato).
+- TREE-004 Heybly 71-inch Light Gray — B0GSFG68GB (ASIN antes asociado erróneamente con WALL-001; verificación indica árbol Heybly).
+- TREE-005 Feandrea UPCT18WS 67.7-inch — B078H9DCTX (candidato de búsqueda secundaria; confirmar ficha y medidas de plataformas).
+- TREE-006 PAWZ Road AM01 72-inch — B0CP7PKH81 (candidato de búsqueda secundaria; confirmar ficha, variante y capacidad).
+
+### Cat Wall Furniture — 7 candidatos
+- WALL-001 FUKUMARU 4-in-1 Gray — B0D2GZ4S1Q (candidato; confirmar exactitud de ficha y carga).
+- WALL-002 FUKUMARU 5-in-1 Beige — B0DX75TKSB (revisión anterior).
+- WALL-003 Cat Wall Shelves 6-in-1 Black — B0FJDY749J (conflicto de marca entre inspecciones; pendiente).
+- WALL-004 Cat Wall Shelves 5-in-1 Brown — B09WDDGP2V (ASIN previamente asociado a window perch; inspección mostró wall shelves; marca por confirmar).
+- WALL-005 XiaZ Corner 3-Step — B0FJFJR4GV (candidato de búsqueda secundaria; reported 25 lb, confirmar).
+- WALL-006 FUKUMARU 2-Platform Rubberwood — B0DRVMY62Y (candidato de búsqueda secundaria; confirmar).
+- WALL-007 FUKUMARU Four-Step Shelf — B087LR5LWP (candidato de búsqueda secundaria; confirmar variante y montaje).
+
+### Window Perches — 5 candidatos
+- WINDOW-001 Zakkart SnugCloud Large — B0F9FB86V8 (inspección anterior: 40 lb).
+- WINDOW-002 Zakkart Windowsill Bolster — B0CBTXSBFW (inspección anterior: 40 lb; requiere alféizar con ranura compatible).
+- WINDOW-003 Sunhoo Large Window Sill Perch — B0DK4R7C9F (candidato de búsqueda secundaria; reported 40 lb, confirmar).
+- WINDOW-004 K&H Deluxe Bolster Window Perch — B07HMVB68D (candidato de búsqueda secundaria; reported 40 lb, confirmar).
+- WINDOW-005 PETSFIT Dual-Level Window Perch — B0FQNR3RMX (candidato de búsqueda secundaria; reported 45 lb, confirmar).
+
+### Correcciones preparadas
+- WALL-001 se corrige al candidato FUKUMARU Gray B0D2GZ4S1Q; B0GSFG68GB se reclasifica como TREE-004 Heybly.
+- WINDOW-003 se reemplaza por Sunhoo B0DK4R7C9F; B09WDDGP2V se reclasifica como WALL-004.
+- Los registros adicionales se guardan como candidatos sin activar ni publicar.
+
+### Implementación
+- `schema.sql` contiene ahora el banco ampliado para inicializaciones nuevas.
+- `migrations/20261119_catalog_candidates.sql` contiene los INSERT/UPDATE para aplicar a D1 existente.
+- La migración **no se ha ejecutado en la base D1 en producción**: no tenemos una sesión autorizada ni acceso a Cloudflare D1 en esta conversación. El commit de GitHub por sí solo no cambia los registros existentes en D1.
